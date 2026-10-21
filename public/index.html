@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="GodEye: consulte seu Microsoft 365 e revise alterações antes de executar."><title>GodEye · Cloud command center</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="GodEye início"><span class="brand-eye">◉</span> GodEye<span class="brand-dot">.</span></a>
+    <div class="workspace-label">WORKSPACE</div>
+    <div class="workspace"><span class="workspace-icon">G</span><div><strong id="tenant-name">Seu ambiente cloud</strong><small id="mode-label">Conecte sua organização</small></div></div>
+    <nav aria-label="Navegação principal">
+      <button class="nav active" data-view="chat"><span>✧</span> Assistente <small>AI</small></button>
+      <button class="nav" data-view="users"><span>♙</span> Usuários</button>
+      <button class="nav" data-view="groups"><span>▦</span> Grupos</button>
+      <button class="nav" data-view="licenses"><span>◇</span> Licenças</button>
+      <div class="nav-divider"></div>
+      <button class="nav" data-view="proposals"><span>✓</span> Aprovações <small id="pending-count">0</small></button>
+      <button class="nav" data-view="audit"><span>≡</span> Auditoria</button>
+      <button class="nav" data-view="connections"><span>⌘</span> Conexões</button>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span> Aprovação antes da execução<small>GodEye / versão 0.1</small></div>
+  </aside>
+  <div class="main-shell">
+    <header><div><span class="breadcrumb">Workspace</span><span class="slash">/</span><strong id="page-title">Assistente</strong></div><div class="header-actions"><span id="environment-badge" class="badge">Carregando</span><button id="logout" class="quiet" hidden>Sair</button><span class="avatar" aria-hidden="true">G</span></div></header>
+    <main>
+      <div id="notice" class="notice" hidden role="status"></div>
+      <section id="login-panel" hidden>
+        <div class="eyebrow">SEU AMBIENTE. SOB SEU CONTROLE.</div><h1>Uma nova visão<br>do seu Microsoft 365.</h1><p class="lead">Pergunte, entenda e transforme seu ambiente.<br>Cada alteração passa por você.</p>
+        <div class="login-card"><h2>Conecte seu workspace</h2><p>Autenticação Microsoft e permissões definidas pela sua organização.</p><a class="primary button" href="/auth/login" id="microsoft-login">Entrar com Microsoft →</a>
+          <form id="demo-form" hidden><label for="demo-tenant">Empresa fictícia</label><select id="demo-tenant"></select><label for="demo-role">Perfil de acesso</label><select id="demo-role"><option value="approver">Aprovador e operador</option><option value="operator">Operador</option><option value="reader">Leitor</option></select><button class="primary" type="submit">Explorar demonstração →</button><small>Dados fictícios. Nenhuma conexão Microsoft é realizada.</small></form>
+        </div>
+      </section>
+      <div id="workspace-content" hidden>
+        <section id="view-chat" class="view">
+          <div class="section-heading"><div class="eyebrow">CLOUD INTELLIGENCE</div><span class="live-label"><span class="status-dot"></span> <span id="data-label">Ambiente conectado</span></span></div>
+          <div class="hero-icon">✧</div><h1>Clareza para decidir.<br><span>Controle para agir.</span></h1><p class="lead">Seu assistente para entender o Microsoft 365.<br>Consulte seu ambiente e prepare alterações com aprovação.</p>
+          <div class="suggestions"><button data-query="Liste os usuários deste tenant."><span>♙</span><strong>Conheça seu diretório</strong><small>Consultar usuários e grupos →</small></button><button data-query="Quais licenças estão disponíveis neste tenant?"><span>◇</span><strong>Explore suas licenças</strong><small>Ver capacidade e consumo →</small></button><button id="quick-proposal"><span>↗</span><strong>Prepare uma alteração</strong><small>Adicionar membro a um grupo →</small></button></div>
+          <div id="messages" aria-live="polite"></div>
+          <form id="chat-form" class="composer"><label class="sr-only" for="message">Pergunte sobre seu ambiente</label><textarea id="message" placeholder="O que você quer saber sobre seu ambiente?" rows="2" maxlength="3000" required></textarea><div class="composer-footer"><span><span class="status-dot"></span> <span id="chat-state">Consultas com contexto do seu tenant</span></span><button type="submit" class="send" aria-label="Enviar mensagem">↑</button></div></form><p class="composer-note">Alterações só são executadas após aprovação explícita na aba Aprovações.</p>
+        </section>
+        <section id="view-data" class="view" hidden><div class="eyebrow">DIRETÓRIO & RECURSOS</div><div class="title-row"><h1 id="data-title">Usuários</h1><button class="secondary" id="refresh-data">Atualizar ↻</button></div><p class="lead" id="data-subtitle"></p><div id="data-table" class="table-wrap"></div></section>
+        <section id="view-proposals" class="view" hidden><div class="eyebrow">MUDANÇAS COM CONTROLE</div><div class="title-row"><h1>Aprovações</h1><button class="primary" id="new-proposal">Nova alteração +</button></div><p class="lead">Confira o tenant, os objetos e o impacto antes de autorizar.</p><div id="proposals-list"></div></section>
+        <section id="view-audit" class="view" hidden><div class="eyebrow">RASTREABILIDADE</div><h1>Auditoria</h1><p class="lead">Consultas, decisões e resultados do tenant conectado. Últimos 100 eventos.</p><div id="audit-list" class="table-wrap"></div></section>
+        <section id="view-connections" class="view" hidden><div class="eyebrow">SEU WORKSPACE</div><h1>Conexões</h1><p class="lead">Capacidades disponíveis nesta versão.</p><div class="connections"><article><span class="connection-symbol">▦</span><h2>Microsoft Entra ID</h2><p>Usuários, grupos, licenças e adição aprovada de membros a grupos estáticos.</p><span class="badge">Disponível</span><a href="/auth/login">Reconectar para consultas →</a><a href="/auth/login?write=1" id="write-login">Entrar com consentimento de escrita →</a></article><article><span class="connection-symbol">✉</span><h2>Exchange Online</h2><p>Administração de caixas postais e políticas.</p><span class="badge muted">Planejado</span></article><article><span class="connection-symbol">◇</span><h2>SharePoint & Azure</h2><p>Administração de sites e recursos de infraestrutura.</p><span class="badge muted">Planejado</span></article></div><div class="detail-box"><strong>Isolamento por organização</strong><p id="tenant-detail"></p><p>O papel no GodEye não concede privilégios na Microsoft. As operações também dependem das permissões do usuário conectado.</p></div></section>
+      </div>
+    </main>
+    <footer><span>GODEYE / CLOUD OPERATIONS</span><span>Visibilidade com responsabilidade.</span></footer>
+  </div>
+  <dialog id="proposal-dialog"><form id="proposal-form"><div class="eyebrow">NOVA PROPOSTA</div><h2>Adicionar membro ao grupo</h2><p>Uma proposta será criada para revisão. Esta etapa não executa alterações.</p><label for="proposal-user">Usuário</label><select id="proposal-user" required></select><label for="proposal-group">Grupo</label><select id="proposal-group" required></select><p class="small">A proposta expira em 15 minutos. Grupos dinâmicos, sincronizados, de funções e listas de distribuição são bloqueados.</p><div class="dialog-actions"><button type="button" id="close-dialog" class="secondary">Cancelar</button><button type="submit" class="primary">Criar proposta</button></div></form></dialog>
+  <dialog id="approval-dialog"><form id="approval-form"><div class="eyebrow">AUTORIZAÇÃO EXPLÍCITA</div><h2>Revisar e executar alteração</h2><p>Confirme os objetos e a organização desta operação.</p><div id="approval-details" class="proposal-details"></div><p id="approval-impact"></p><div class="dialog-actions"><button type="button" id="cancel-approval" class="secondary">Cancelar</button><button type="submit" class="primary">Confirmar aprovação e executar</button></div></form></dialog>
+</body></html>

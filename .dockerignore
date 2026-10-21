@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+node_modules
+data
+work
+test
+docs
+.github
+*.sqlite*
+*.pem
+*.pfx
+*.key

@@ -1,0 +1,5 @@
+[
+  { "allowedMemberTypes": ["User"], "description": "Consultar dados e registros do tenant no GodEye.", "displayName": "GodEye Reader", "id": "c9d488a3-f299-4bfb-b071-986e34423311", "isEnabled": true, "value": "GodEye.Reader" },
+  { "allowedMemberTypes": ["User"], "description": "Consultar e criar propostas de alteração no GodEye.", "displayName": "GodEye Operator", "id": "c9d488a3-f299-4bfb-b071-986e34423312", "isEnabled": true, "value": "GodEye.Operator" },
+  { "allowedMemberTypes": ["User"], "description": "Consultar, aprovar e rejeitar propostas no GodEye.", "displayName": "GodEye Approver", "id": "c9d488a3-f299-4bfb-b071-986e34423313", "isEnabled": true, "value": "GodEye.Approver" }
+]

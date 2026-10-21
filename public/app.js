@@ -76,11 +76,12 @@ async function refreshProposals() {
       const actions = el('div', undefined, 'proposal-actions'), approve = el('button', 'Aprovar e executar', 'primary'), reject = el('button', 'Rejeitar', 'secondary');
       const allowed = state.session.actor.roles.includes('GodEye.Approver');
       approve.disabled = !allowed || !state.session.writeConsent; reject.disabled = !allowed;
-      approve.addEventListener('click', () => guarded(async () => {
-        if (!confirm(`Autorizar no tenant ${p.tenant}?\n\nAdicionar ${p.user.userPrincipalName} ao grupo ${p.group.displayName}.\n\n${p.impact}`)) return;
-        try { const r = await api(`/api/proposals/${p.id}/approve`, { hash: p.hash }); notice(statuses[r.status]); }
-        finally { await refreshProposals(); }
-      }, approve));
+      approve.addEventListener('click', () => {
+        state.approval = p;
+        $('approval-details').replaceChildren(...[`Tenant: ${p.tenant}`, `Usuário: ${p.user.userPrincipalName}`, `Object ID do usuário: ${p.user.id}`, `Grupo: ${p.group.displayName}`, `Object ID do grupo: ${p.group.id}`, 'Alteração: não é membro → membro'].map(text => el('div', text)));
+        $('approval-impact').textContent = p.impact;
+        $('approval-dialog').showModal();
+      });
       reject.addEventListener('click', () => guarded(async () => { await api(`/api/proposals/${p.id}/reject`, {}); await refreshProposals(); }, reject));
       actions.append(approve, reject);
       if (!allowed) actions.append(el('small', 'Um usuário com papel de aprovador precisa revisar esta proposta.'));
@@ -109,6 +110,14 @@ $('refresh-data').addEventListener('click', e => guarded(() => navigate(state.vi
 $('new-proposal').addEventListener('click', () => guarded(openProposal));
 $('quick-proposal').addEventListener('click', () => guarded(openProposal));
 $('close-dialog').addEventListener('click', () => $('proposal-dialog').close());
+$('cancel-approval').addEventListener('click', () => { state.approval = null; $('approval-dialog').close(); });
+$('approval-form').addEventListener('submit', e => {
+  e.preventDefault(); const p = state.approval; if (!p) return;
+  guarded(async () => {
+    try { const r = await api(`/api/proposals/${p.id}/approve`, { hash: p.hash }); notice(statuses[r.status]); }
+    finally { state.approval = null; $('approval-dialog').close(); await refreshProposals(); }
+  }, e.submitter);
+});
 $('proposal-form').addEventListener('submit', e => {
   e.preventDefault(); guarded(async () => { await api('/api/proposals', { userId: $('proposal-user').value, groupId: $('proposal-group').value }); $('proposal-dialog').close(); await navigate('proposals'); }, e.submitter);
 });
